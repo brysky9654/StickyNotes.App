@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StickyNotes.App"
         mc:Ignorable="d"
-        WindowStyle="ThreeDBorderWindow"
-        Title="MainWindow" Height="600" Width="500" MinWidth="350" MaxWidth="700">
+        WindowStyle="None"
+        Height="600" Width="500" MinWidth="350" MaxWidth="700">
 
     <!--TODO : 돋보기 추가 , X고정 (scrollviewer ex 참고하기 , Stackpanel 사용)  Search부분 증가-->
 
@@ -40,7 +40,7 @@
     
     <Grid Background="#FF000000">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="10*"/>
@@ -50,6 +50,46 @@
                 <ColumnDefinition Width="30" />
             <ColumnDefinition Width="30"/>
          </Grid.ColumnDefinitions>
+
+
+        <Button
+            DockPanel.Dock="Left"
+            Grid.Column="0" Grid.Row="0"
+            Height="40"
+            Width="30"
+            FontSize="35"
+            HorizontalAlignment="Left"  VerticalContentAlignment="Top" Background="Black"
+                Foreground="DarkGray"
+            Margin="0 -20 0 0"
+                BorderThickness="0" HorizontalContentAlignment="Stretch">
+            +
+        </Button>
+        <Button Grid.Column="1"
+            DockPanel.Dock="Right"
+           Grid.Row="0"
+            Height="40"
+            Width="30"
+            FontSize="35"
+            HorizontalAlignment="Right"  VerticalContentAlignment="Top" Background="Black"
+                Foreground="DarkGray"
+            Margin="0 -20 0 0"
+                BorderThickness="0" HorizontalContentAlignment="Stretch">
+            +
+        </Button>
+        <Button Grid.Column="2"
+            DockPanel.Dock="Right"
+                Click="closeButton_Click"
+                Grid.Row="0"
+            Height="40"
+            Width="30"
+            FontSize="35"
+            HorizontalAlignment="Right"  VerticalContentAlignment="Stretch" Background="Black"
+                Foreground="DarkGray"
+            Margin="0 -20 0 0"
+                BorderThickness="0" HorizontalContentAlignment="Stretch">
+            x
+        </Button>
+
 
 
         <TextBlock Grid.Row="1" Text="Sticky Notes" Foreground="White" FontSize="23" FontWeight="Bold"

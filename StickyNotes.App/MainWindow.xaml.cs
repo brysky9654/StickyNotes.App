@@ -25,6 +25,8 @@ namespace StickyNotes.App
       InitializeComponent();
     }
 
+    private void closeButton_Click(object sender, RoutedEventArgs e) => Close();
+
     //TODO TextBlock
     //text block 을 만든 이유 : 텍스트박스와 구분해서 텍스트박스 글자 수가 0이면 텍스트 block에 Search...  을 글자수가 0이아니면 textBlock 글자는 "" 
     //text box안에 Textblock 또는 Label로 Search... 글자 만들기.
@@ -41,19 +43,6 @@ namespace StickyNotes.App
 
 
 
-    private bool IsWater = true;
-
-    private void TextBox_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-      //searchTextBlock.Foreground = new System.Windows.Media.SolidColorBrush(Colors.DarkGray);
-
-    }
-
-    private void TextBox_KeyDown(object sender, KeyEventArgs e)
-    {
-
-
-    }
   }
 }
 
