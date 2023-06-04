@@ -6,6 +6,16 @@
              xmlns:local="clr-namespace:StickyNotes.App"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200">
+
+    <UserControl.Resources>
+        
+        
+    </UserControl.Resources>
     <TextBox Name="SubTextBox" TextChanged="TextBox_Changed"/>
+
+
+
+
+
 
 </UserControl>

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StickyNotes.App
@@ -6,15 +7,13 @@ namespace StickyNotes.App
   /// <summary>
   /// Interaction logic for MainWindow.xaml
   /// </summary>
-  public partial class MainWindow : Window
+  public partial class StickyNotesMainView : Window
   {
 
     private StickyNotesView stickyNotesView;
-    public MainWindow()
+    public StickyNotesMainView()
     {
       InitializeComponent();
-
-
     }
 
     protected  void Border_PreviewMouseDownLeft(object sender, MouseButtonEventArgs e)
@@ -46,9 +45,11 @@ namespace StickyNotes.App
         //새로운 윈도우창에 텍스트 box가 생겨지고 동시에 기존 윈도우창에 textblock이 생겨진다.
         //그리고 새 윈도우창에 텍스트box 에 textChaned이벤트를 줘서 원래 윈도우창의 textblock에 문자열들이 출력되야한다.
         // 또한 원래 윈도우창에서 textblock을 클릭하면, lingking된 textbox가 나와서 쓰기모드가 가능해야한다.
+        TextBlock textBlock = new TextBlock();
 
-        stickyNotesView = new StickyNotesView();
-
+        
+        stackPanel_Notes.Children.Add(textBlock);
+        stickyNotesView = new StickyNotesView(textBlock);
 
 
         //if (textBox.Text.Length > 0)
