@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:StickyNotes.App"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <TextBlock x:Key="TextBlockNote" Background="DimGray" Foreground="White"/>
+        
+
     </Application.Resources>
 </Application>

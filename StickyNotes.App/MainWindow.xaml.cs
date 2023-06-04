@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace StickyNotes.App
 {
@@ -20,11 +8,20 @@ namespace StickyNotes.App
   /// </summary>
   public partial class MainWindow : Window
   {
+
+    private StickyNotesView stickyNotesView;
     public MainWindow()
     {
       InitializeComponent();
+
+
     }
 
+    protected  void Border_PreviewMouseDownLeft(object sender, MouseButtonEventArgs e)
+    {
+    //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window
+      DragMove();
+    }
     private void closeButton_Click(object sender, RoutedEventArgs e) => Close();
 
     //TODO TextBlock
@@ -41,6 +38,28 @@ namespace StickyNotes.App
 
     //New Window 구성
 
+    private void addTextBox_Click(object sender, RoutedEventArgs e)
+    {
+      if(e.Source != null)
+      {
+
+        //새로운 윈도우창에 텍스트 box가 생겨지고 동시에 기존 윈도우창에 textblock이 생겨진다.
+        //그리고 새 윈도우창에 텍스트box 에 textChaned이벤트를 줘서 원래 윈도우창의 textblock에 문자열들이 출력되야한다.
+        // 또한 원래 윈도우창에서 textblock을 클릭하면, lingking된 textbox가 나와서 쓰기모드가 가능해야한다.
+
+        stickyNotesView = new StickyNotesView();
+
+
+
+        //if (textBox.Text.Length > 0)
+        //{
+        //  string fileText = File.ReadAllText(textBox.Text);
+        //}
+
+      }
+
+
+    }
 
 
   }
