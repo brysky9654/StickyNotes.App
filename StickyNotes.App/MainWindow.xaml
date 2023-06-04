@@ -1,0 +1,86 @@
+﻿<Window x:Class="StickyNotes.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StickyNotes.App"
+        mc:Ignorable="d"
+        WindowStyle="ThreeDBorderWindow"
+        Title="MainWindow" Height="600" Width="500" MinWidth="350" MaxWidth="700">
+
+    <!--TODO : 돋보기 추가 , X고정 (scrollviewer ex 참고하기 , Stackpanel 사용)  Search부분 증가-->
+
+    <Window.Resources>
+        <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid Margin="13 0 0 0">
+                            <Border Background="DimGray" BorderBrush="DimGray" />
+                            <ScrollViewer  x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" VerticalAlignment="Center"
+                               Visibility="Collapsed" Foreground="Gray" FontFamily="Arial"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="DimGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Background="#FF000000">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="3*" />
+                <ColumnDefinition Width="30" />
+            <ColumnDefinition Width="30"/>
+         </Grid.ColumnDefinitions>
+
+
+        <TextBlock Grid.Row="1" Text="Sticky Notes" Foreground="White" FontSize="23" FontWeight="Bold"
+                   Margin="13 0 0 0" />
+
+        <TextBox Grid.Row="2" Style="{StaticResource MyWaterMarkStyle}" 
+                 Tag="Search..."
+                 Foreground="White" 
+                 CaretBrush="White"/>
+
+        <Button Grid.Row="2" Grid.Column="1" 
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch" 
+                FontFamily="Segoe UI Symbol"
+                FontSize="18"
+                Foreground="Wheat"
+                Background="DimGray"
+                BorderBrush="DimGray"
+                ></Button>
+        <Button Grid.Row="2" Grid.Column="2"
+                    Margin="0 0 10 0"
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch"  
+                Background="DimGray"
+                BorderBrush="DimGray"
+               FontFamily="Unicode"
+                Content="&#x1F50E;" />  
+    </Grid>
+
+
+
+
+    
+</Window>

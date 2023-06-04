@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickyNotes.App", "StickyNotes.App\StickyNotes.App.csproj", "{B1B49277-1064-41BA-BE64-BD908DA1A749}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StickyNotes.UITests", "StickyNotes.UITests\StickyNotes.UITests.csproj", "{9C914449-59C9-493C-B867-622AACFF57A9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1B49277-1064-41BA-BE64-BD908DA1A749}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1B49277-1064-41BA-BE64-BD908DA1A749}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1B49277-1064-41BA-BE64-BD908DA1A749}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1B49277-1064-41BA-BE64-BD908DA1A749}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C914449-59C9-493C-B867-622AACFF57A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C914449-59C9-493C-B867-622AACFF57A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C914449-59C9-493C-B867-622AACFF57A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C914449-59C9-493C-B867-622AACFF57A9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DBE7436A-C32C-40B0-B39F-38ACA33F5A5C}
+	EndGlobalSection
+EndGlobal
