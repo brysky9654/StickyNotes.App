@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         WindowStyle="None"
         Height="600" Width="500" MinWidth="350" MaxWidth="700"
-        MouseDown="Border_PreviewMouseDownLeft"
+        
         >
 
     <!--TODO : 돋보기 추가 , X고정 (scrollviewer ex 참고하기 , Stackpanel 사용)  Search부분 증가-->
@@ -58,7 +58,8 @@
 
 
         <!--Header-->
-        <Button
+        <StackPanel Orientation="Horizontal"   MouseDown="Header_PreviewMouseDownLeft" >
+            <Button
             Grid.Column="0" Grid.Row="0"
             Click="addTextBox_Click"
             Height="40"
@@ -68,8 +69,12 @@
                 Foreground="DarkGray"
             Margin="0 -20 0 0"
                 BorderThickness="0" HorizontalContentAlignment="Stretch">
-            +
-        </Button>
+                +
+            </Button>
+            <Grid  MouseDown="Header_PreviewMouseDownLeft" Background="#00000000" Width="500" Height="50"/>
+
+        </StackPanel>
+        
         <Button Grid.Column="1"
         
            Grid.Row="0"
@@ -98,10 +103,11 @@
 
 
 
-
+       <!--Subject-->
         <TextBlock Grid.Row="1" Text="Sticky Notes" Foreground="White" FontSize="23" FontWeight="Bold"
-                   Margin="13 0 0 0" />
-
+                   Margin="13 0 0 10" />
+         
+        <!--Search-->
         <TextBox Grid.Row="2" Style="{StaticResource MyWaterMarkStyle}" 
                  Tag="Search..."
                  Foreground="White" 
@@ -125,8 +131,13 @@
                FontFamily="Unicode"
                 Content="&#x1F50E;" />
 
+        
+        
         <!--TextBox memo-->
-        <StackPanel Name="stackPanel_Notes" Grid.Row="3" Orientation="Vertical">
+        <StackPanel Name="stackPanel_Notes" Grid.Row="3" Grid.ColumnSpan="3" Orientation="Vertical"
+                    Margin="13 10 10 10"
+                    MouseLeftButtonDown="Border_MouseLeftButtonDown"
+                    >
 
         </StackPanel>
     </Grid>
