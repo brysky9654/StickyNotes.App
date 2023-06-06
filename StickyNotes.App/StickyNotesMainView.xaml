@@ -58,10 +58,10 @@
 
 
         <!--Header-->
-        <StackPanel Orientation="Horizontal"   MouseDown="Header_PreviewMouseDownLeft" >
+        <StackPanel Orientation="Horizontal"   >
             <Button
             Grid.Column="0" Grid.Row="0"
-            Click="addTextBox_Click"
+            Click="MainAddTextBox_Click"
             Height="40"
             Width="30"
             FontSize="35"
@@ -71,7 +71,7 @@
                 BorderThickness="0" HorizontalContentAlignment="Stretch">
                 +
             </Button>
-            <Grid  MouseDown="Header_PreviewMouseDownLeft" Background="#00000000" Width="500" Height="50"/>
+            <Grid  MouseDown="MainHeader_PreviewMouseDownLeft" Background="#00000000" Width="500" Height="50"/>
 
         </StackPanel>
         
@@ -136,7 +136,7 @@
         <!--TextBox memo-->
         <StackPanel Name="stackPanel_Notes" Grid.Row="3" Grid.ColumnSpan="3" Orientation="Vertical"
                     Margin="13 10 10 10"
-                    MouseLeftButtonDown="Border_MouseLeftButtonDown"
+                    MouseLeftButtonDown="TextBlockList_MouseLeftButtonDown"
                     >
 
         </StackPanel>
