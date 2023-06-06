@@ -14,9 +14,8 @@
     <!--TODO : 돋보기 추가 , X고정 (scrollviewer ex 참고하기 , Stackpanel 사용)  Search부분 증가-->
 
     <Window.Resources>
-
-
         <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
+           
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
@@ -55,7 +54,6 @@
             <ColumnDefinition Width="30" />
             <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
-
 
         <!--Header-->
         <StackPanel Orientation="Horizontal"   >
@@ -134,9 +132,16 @@
         
         
         <!--TextBox memo-->
+        <ComboBox x:Name="textBlockComboBox" Visibility="Collapsed" Width="50" Height="50">
+            <ComboBoxItem Content="Open Note" MouseDown="OpenNote_Click"/>
+            <ComboBoxItem Content="Delete Note" MouseDown="DeleteNote_Click"/>
+        </ComboBox>
+
+
         <StackPanel Name="stackPanel_Notes" Grid.Row="3" Grid.ColumnSpan="3" Orientation="Vertical"
                     Margin="13 10 10 10"
                     MouseLeftButtonDown="TextBlockList_MouseLeftButtonDown"
+                    MouseRightButtonDown="TextBlockList_MouseRightButtonDown"
                     >
 
         </StackPanel>

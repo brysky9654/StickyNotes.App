@@ -38,10 +38,21 @@ namespace StickyNotes.App
 // On the other hand, the main window has a delete button function in textBlock so that you can remove the new linked window when you delete it.
     protected void TextBlockList_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-      //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window
+      //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window  
       foreach (Linq x in linq) 
       {
-        x.textBlock.MouseLeftButtonDown += selectTextBlock_Click;
+        x.win.Topmost = false; ;// 맨앞에있는 것들 Topmost false.  selectTextBlock_Click 이벤트 내에서 클릭버튼 대상 window를 우선적으로 보이게 만듦.
+        x.textBlock.MouseLeftButtonDown += selectTextBlock_Click; 
+      }
+    }
+
+    protected void TextBlockList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+      //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window  
+      foreach (Linq x in linq)
+      {
+        x.win.Topmost = false; ;// 맨앞에있는 것들 Topmost false.  selectTextBlock_Click 이벤트 내에서 클릭버튼 대상 window를 우선적으로 보이게 만듦.
+        x.textBlock.MouseRightButtonDown += TextBlockList_Event;
       }
     }
     private void closeButton_Click(object sender, RoutedEventArgs e) => Close();
@@ -57,6 +68,8 @@ namespace StickyNotes.App
     private void selectTextBlock_Click(object sender, MouseButtonEventArgs e)
     {
       var sender_type = sender.GetType();
+
+      //축약하기  sender_TextBlock_Type 굳이 안만들고 sender로 바로 할 수 있을 것 같음
       TextBlock sender_textBlock_type = (TextBlock)sender;
       //sender type is textBlock type
 
@@ -69,6 +82,7 @@ namespace StickyNotes.App
           {
             //x.win.Visibility = Visibility.Collapsed;
             x.win.Visibility = Visibility.Visible;
+            x.win.Topmost = true;
           }
         }
       }
@@ -88,6 +102,38 @@ namespace StickyNotes.App
         stickyNotesView = new StickyNotesView(textBlock, linq, this);
       }
     }
+    private void TextBlockList_Event(object sender, MouseButtonEventArgs e)
+    {
+      //TODO: Delete list box in main view
+
+
+      foreach(Linq x in linq)
+      {
+        if(x.textBlock == sender)
+        {
+
+          //TODO 콤보박스 위치 설정. 해당 TXTBLOCK 영역에. 마우스 클릭 위치에 놓기.  [주]
+          textBlockComboBox.Visibility = Visibility.Visible;
+
+
+        }
+      }
+    }
+    private void OpenNote_Click(object sender, MouseButtonEventArgs e)
+    {
+      if(e.LeftButton == MouseButtonState.Pressed)
+      {
+
+      }
+    }
+    private void DeleteNote_Click(object sender, MouseButtonEventArgs e)
+    {
+      if (e.LeftButton == MouseButtonState.Pressed)
+      {
+
+      }
+    }
+
   }
 }
 

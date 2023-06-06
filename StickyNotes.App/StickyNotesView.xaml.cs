@@ -80,11 +80,8 @@ namespace StickyNotes.App
 
     private void SubAddTextBox_Click(object sender, RoutedEventArgs e)
     {
-
-      //StickyNotesMainView stickyNotesView = new();
-
       _main_this.MainAddTextBox_Click(sender, e); // If i do this, new window is showing but can't make textblock in MainView stackpanel since new() initialze.
-     
+
     }
   }
 }
