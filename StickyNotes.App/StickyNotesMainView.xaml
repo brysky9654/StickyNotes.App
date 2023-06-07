@@ -15,7 +15,7 @@
 
     <Window.Resources>
         <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
-           
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
@@ -42,7 +42,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="#FF000000" MouseDown="MainGrid_Click">
+    <Grid Background="#FF000000">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="1*"/>
@@ -72,7 +72,7 @@
             <Grid  MouseDown="MainHeader_MouseDownLeft" Background="#00000000" Width="500" Height="50"/>
 
         </StackPanel>
-        
+
         <Button Grid.Column="1"
         
            Grid.Row="0"
@@ -101,10 +101,10 @@
 
 
 
-       <!--Subject-->
+        <!--Subject-->
         <TextBlock Grid.Row="1" Text="Sticky Notes" Foreground="White" FontSize="23" FontWeight="Bold"
                    Margin="13 0 0 10" />
-         
+
         <!--Search-->
         <TextBox Grid.Row="2" Style="{StaticResource MyWaterMarkStyle}" 
                  Tag="Search..."
@@ -129,21 +129,20 @@
                FontFamily="Unicode"
                 Content="&#x1F50E;" />
 
-        
-        
-        <!--TextBox memo-->
 
+
+        <!--TextBox memo-->
+        <ComboBox x:Name="textBlockComboBox" Visibility="Collapsed" Width="50" Height="50">
+            <ComboBoxItem Content="Open Note" MouseDown="OpenNote_Click"/>
+            <ComboBoxItem Content="Delete Note" MouseDown="DeleteNote_Click"/>
+        </ComboBox>
 
 
         <StackPanel Name="stackPanel_Notes" Grid.Row="3" Grid.ColumnSpan="3" Orientation="Vertical"
                     Margin="13 10 10 10"
                     MouseLeftButtonDown="TextBlockList_MouseLeftButtonDown"
-                    PreviewMouseRightButtonDown="TextBlockList_MouseRightButtonDown"
+                    MouseRightButtonDown="TextBlockList_MouseRightButtonDown"
                     >
-            <ComboBox x:Name="textBlockComboBox" Visibility="Collapsed" Width="50" Height="50">
-                <ComboBoxItem Content="Open Note" MouseDown="OpenNote_Click"/>
-                <ComboBoxItem Content="Delete Note" MouseDown="DeleteNote_Click"/>
-            </ComboBox>
 
         </StackPanel>
     </Grid>
