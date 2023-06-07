@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +20,7 @@ namespace StickyNotes.App
       public TextBlock textBlock;
     }
     List<Linq> linq = new();
+    List<Linq> deleteLinq =  new();
     public StickyNotesMainView()
     {
       InitializeComponent();
@@ -41,7 +43,7 @@ namespace StickyNotes.App
       //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window  
       foreach (Linq x in linq)
       {
-        x.win.Topmost = false; ;// 맨앞에있는 것들 Topmost false.  selectTextBlock_Click 이벤트 내에서 클릭버튼 대상 window를 우선적으로 보이게 만듦.
+        x.win.Topmost = false; ;// Set all sub(new) windows to Topmost false. As a result, the click button target window is made to appear preferentially within the selectTextBlock_Click event.
         x.textBlock.MouseLeftButtonDown += selectTextBlock_Click;
       }
     }
@@ -51,9 +53,12 @@ namespace StickyNotes.App
       //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window  
       foreach (Linq x in linq)
       {
-        x.win.Topmost = false; ;// 맨앞에있는 것들 Topmost false.  selectTextBlock_Click 이벤트 내에서 클릭버튼 대상 window를 우선적으로 보이게 만듦.
+        x.win.Topmost = false; ;// Set all sub(new) windows to Topmost false. As a result, the click button target window is made to appear preferentially within the selectTextBlock_Click event.
         x.textBlock.MouseRightButtonDown += TextBlockList_Event;
       }
+
+
+
     }
     private void closeButton_Click(object sender, RoutedEventArgs e) => Close();
 
@@ -83,6 +88,8 @@ namespace StickyNotes.App
             //x.win.Visibility = Visibility.Collapsed;
             x.win.Visibility = Visibility.Visible;
             x.win.Topmost = true;
+
+
           }
         }
       }
@@ -111,29 +118,66 @@ namespace StickyNotes.App
       {
         if (x.textBlock == sender)
         {
+          deleteLinq.Insert(0, x);
 
-          //TODO 콤보박스 위치 설정. 해당 TXTBLOCK 영역에. 마우스 클릭 위치에 놓기.  [주]
-          textBlockComboBox.Visibility = Visibility.Visible;
+          //TODO Set combo box position. In the corresponding textBlock area. Place in the mouse click position. [Note]
+          //잠만textBlockComboBox.Visibility = Visibility.Visible;
+          var button = new Button();
+          var contextmenu = new ContextMenu();
+          button.ContextMenu = contextmenu;
+          var closeNote_MenuItem = new MenuItem();
+          var openNote_MenuItem  = new MenuItem();
+          var deleteNote_MenuItem = new MenuItem();
+          deleteNote_MenuItem.Header = "Delete note";
+          if (x.win.Visibility == Visibility.Visible)
+          {
+            closeNote_MenuItem.Header = "Close note";
+            contextmenu.Items.Add(closeNote_MenuItem);
+          }
+          else
+          {
+            openNote_MenuItem.Header = "Open note";
+            contextmenu.Items.Add(openNote_MenuItem);
+          }
+          contextmenu.Items.Add(deleteNote_MenuItem);
+          x.textBlock.ContextMenu = contextmenu;
 
+          //https://stackoverflow.com/questions/65974406/dynamically-adding-a-context-menu-item-with-a-click-handler-in-wpf/65974457#65974457
+          closeNote_MenuItem.Click += CloseNote_Click;
+          openNote_MenuItem.Click += OpenNote_Click;
+          deleteNote_MenuItem.Click += DeleteNote_Click;
 
         }
       }
     }
-    private void OpenNote_Click(object sender, MouseButtonEventArgs e)
+    private void CloseNote_Click(object sender, RoutedEventArgs e)
     {
-      if (e.LeftButton == MouseButtonState.Pressed)
-      {
+      
+      //.Visibility = Visibility.Collapsed;
 
-      }
+
+          MessageBox.Show("close note");
+      deleteLinq[0].win.Visibility = Visibility.Collapsed;
+
+
     }
-    private void DeleteNote_Click(object sender, MouseButtonEventArgs e)
+
+    private void OpenNote_Click(object sender, RoutedEventArgs e)
     {
-      if (e.LeftButton == MouseButtonState.Pressed)
-      {
-
-      }
+      //.Visibility = Visibility.Visible;
+      MessageBox.Show("open note");
+      deleteLinq[0].win.Visibility = Visibility.Visible;
     }
+    private void DeleteNote_Click(object sender, RoutedEventArgs e)
+    {
+      //.Close();
+      MessageBox.Show("delete note");
+      stackPanel_Notes.Children.Remove(deleteLinq[0].textBlock);
+      deleteLinq[0].win.Close();
+    }
+
 
   }
 }
+
 

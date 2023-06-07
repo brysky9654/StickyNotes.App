@@ -106,6 +106,7 @@
                    Margin="13 0 0 10" />
 
         <!--Search-->
+
         <TextBox Grid.Row="2" Style="{StaticResource MyWaterMarkStyle}" 
                  Tag="Search..."
                  Foreground="White" 
@@ -130,21 +131,13 @@
                 Content="&#x1F50E;" />
 
 
-
-        <!--TextBox memo-->
-        <ComboBox x:Name="textBlockComboBox" Visibility="Collapsed" Width="50" Height="50">
-            <ComboBoxItem Content="Open Note" MouseDown="OpenNote_Click"/>
-            <ComboBoxItem Content="Delete Note" MouseDown="DeleteNote_Click"/>
-        </ComboBox>
-
-
         <StackPanel Name="stackPanel_Notes" Grid.Row="3" Grid.ColumnSpan="3" Orientation="Vertical"
                     Margin="13 10 10 10"
                     MouseLeftButtonDown="TextBlockList_MouseLeftButtonDown"
                     MouseRightButtonDown="TextBlockList_MouseRightButtonDown"
                     >
-
         </StackPanel>
+
     </Grid>
 
 </Window>

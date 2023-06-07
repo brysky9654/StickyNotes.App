@@ -17,9 +17,6 @@ namespace StickyNotes.App
   /// Interaction logic for StickyNotesView.xaml
   /// </summary>
 
-
-
-
   public partial class StickyNotesView : Window
   {
     private TextBlock _textBlock;
@@ -33,7 +30,7 @@ namespace StickyNotes.App
       InitializeComponent();
       _textBlock = textBlock;
       _Linq = linq;  // The linq in the main view is referenced by _Linq. When deleting _Linq elements, also delete linq
-      _main_this = main_this; // 새 윈도우창에서 새윈도우 창 생성법.
+      _main_this = main_this; 
       newWindow();
     }
 
@@ -55,14 +52,6 @@ namespace StickyNotes.App
         _textBlock.Text = "";
         _textBlock.Text = SubTextBox.Text;
         _textBlock.Foreground = new SolidColorBrush(Colors.White);
-
-        //system.invalidoperationexception: 'specified element is already the logical child of another element. disconnect it first.'
-        //resolve:remove downward code.
-        //if(mainView.stackPanel_Notes != null)
-        // {
-        //   //mainView.stackPanel_Notes.Children.Clear();
-        // }
-        //mainView.stackPanel_Notes.Children.Add(_textBlock);
 
       }
     }
