@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -19,11 +20,13 @@ namespace StickyNotes.App
       public TextBlock textBlock;
     }
     List<Linq> linq = new();
+    private bool isComboBox;
+
     public StickyNotesMainView()
     {
       InitializeComponent();
     }
-    protected void MainHeader_PreviewMouseDownLeft(object sender, MouseButtonEventArgs e) 
+    protected void MainHeader_MouseDownLeft(object sender, MouseButtonEventArgs e) 
     {
       // the reason why couldn't mouse down event In Grid Grid   https://stackoverflow.com/questions/12669756/mousedown-doesnt-work-in-grid-only-on-buttons-which-in-grids
       if (e.ButtonState == MouseButtonState.Pressed)
@@ -39,6 +42,15 @@ namespace StickyNotes.App
     protected void TextBlockList_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
       //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window  
+      if (textBlockComboBox.Visibility == Visibility.Visible)
+      {
+        this.Topmost = true;
+        textBlockComboBox.Visibility = Visibility.Collapsed;
+        isComboBox = false;
+        return;
+      }
+
+
       foreach (Linq x in linq) 
       {
         x.win.Topmost = false; ;// 맨앞에있는 것들 Topmost false.  selectTextBlock_Click 이벤트 내에서 클릭버튼 대상 window를 우선적으로 보이게 만듦.
@@ -51,6 +63,7 @@ namespace StickyNotes.App
       //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window  
       foreach (Linq x in linq)
       {
+        textBlockComboBox.Visibility = Visibility.Collapsed;
         x.win.Topmost = false; ;// 맨앞에있는 것들 Topmost false.  selectTextBlock_Click 이벤트 내에서 클릭버튼 대상 window를 우선적으로 보이게 만듦.
         x.textBlock.MouseRightButtonDown += TextBlockList_Event;
       }
@@ -67,6 +80,22 @@ namespace StickyNotes.App
 
     private void selectTextBlock_Click(object sender, MouseButtonEventArgs e)
     {
+      foreach (Linq x in linq)
+      {
+        if ((TextBlock)sender == x.textBlock)
+        {
+          //x.win.Visibility = Visibility.Collapsed;
+          x.win.Visibility = Visibility.Visible;
+          x.win.Topmost = true;
+        }
+      }
+
+      if (textBlockComboBox.Visibility == Visibility.Visible)
+      {
+        textBlockComboBox.Visibility = Visibility.Collapsed;
+        isComboBox = false;
+        return;
+      }
       var sender_type = sender.GetType();
 
       //축약하기  sender_TextBlock_Type 굳이 안만들고 sender로 바로 할 수 있을 것 같음
@@ -105,17 +134,22 @@ namespace StickyNotes.App
     private void TextBlockList_Event(object sender, MouseButtonEventArgs e)
     {
       //TODO: Delete list box in main view
-
-
       foreach(Linq x in linq)
       {
-        if(x.textBlock == sender)
+        textBlockComboBox.Visibility = Visibility.Collapsed;
+        if (x.textBlock == sender)
         {
-
+          x.win.Topmost = true; // new jlim
           //TODO 콤보박스 위치 설정. 해당 TXTBLOCK 영역에. 마우스 클릭 위치에 놓기.  [주]
-          textBlockComboBox.Visibility = Visibility.Visible;
+          //textBlockComboBox.Visibility = textBlockComboBox.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+          if (isComboBox == false)
+          {
+            isComboBox = true;
+            textBlockComboBox.Visibility = Visibility.Visible;
 
-
+            
+       
+          }
         }
       }
     }
@@ -134,6 +168,39 @@ namespace StickyNotes.App
       }
     }
 
+    private void MainGrid_Click(object sender, RoutedEventArgs e)
+    {//event bubble and.. turnelling
+     // textBlockComboBox.Visibility = Visibility.Collapsed;
+     // if (e.RoutedEvent == MouseDownEvent) // TODO : Linq TextBlock MouseDownEvent.
+     //{
+     //  textBlockComboBox.Visibility = textBlockComboBox.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+     //}
+
+      // combobox vis && isComboBox true  ->  t -> pass (return)
+      // combobox vis && isComboBox false  -> f  -> combobox unvis. 
+      // combobox unvis && isComboBox true  -> t
+      // combobox unvis && is ComboBox false  -> t
+      //foreach(Linq x in linq)
+      //{
+      //  if (x.win.Topmost) { return; }
+      //}
+      //this.Topmost = true; 
+
+      //if ((isComboBox== false) ||
+      //  ((isComboBox == false) && (textBlockComboBox.Visibility == Visibility.Visible)))
+      //{
+      //  textBlockComboBox.Visibility= Visibility.Collapsed;
+      //}
+      //else
+      //{
+      //  isComboBox = false;
+      //  textBlockComboBox.Visibility = Visibility.Visible;
+
+      //  return;
+      //}
+
+
+    }
   }
 }
 

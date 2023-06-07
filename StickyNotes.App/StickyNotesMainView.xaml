@@ -42,7 +42,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="#FF000000">
+    <Grid Background="#FF000000" MouseDown="MainGrid_Click">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="1*"/>
@@ -69,7 +69,7 @@
                 BorderThickness="0" HorizontalContentAlignment="Stretch">
                 +
             </Button>
-            <Grid  MouseDown="MainHeader_PreviewMouseDownLeft" Background="#00000000" Width="500" Height="50"/>
+            <Grid  MouseDown="MainHeader_MouseDownLeft" Background="#00000000" Width="500" Height="50"/>
 
         </StackPanel>
         
@@ -132,17 +132,18 @@
         
         
         <!--TextBox memo-->
-        <ComboBox x:Name="textBlockComboBox" Visibility="Collapsed" Width="50" Height="50">
-            <ComboBoxItem Content="Open Note" MouseDown="OpenNote_Click"/>
-            <ComboBoxItem Content="Delete Note" MouseDown="DeleteNote_Click"/>
-        </ComboBox>
+
 
 
         <StackPanel Name="stackPanel_Notes" Grid.Row="3" Grid.ColumnSpan="3" Orientation="Vertical"
                     Margin="13 10 10 10"
                     MouseLeftButtonDown="TextBlockList_MouseLeftButtonDown"
-                    MouseRightButtonDown="TextBlockList_MouseRightButtonDown"
+                    PreviewMouseRightButtonDown="TextBlockList_MouseRightButtonDown"
                     >
+            <ComboBox x:Name="textBlockComboBox" Visibility="Collapsed" Width="50" Height="50">
+                <ComboBoxItem Content="Open Note" MouseDown="OpenNote_Click"/>
+                <ComboBoxItem Content="Delete Note" MouseDown="DeleteNote_Click"/>
+            </ComboBox>
 
         </StackPanel>
     </Grid>

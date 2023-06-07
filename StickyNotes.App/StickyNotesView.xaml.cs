@@ -43,13 +43,14 @@ namespace StickyNotes.App
     {
       //If there are two windows in the same file, the item name created in one window cannot be used in another.
             _Linq.Add(new Linq { win= this, textBlock = _textBlock });  
- 
+     this.Topmost = true;
       this.Show();
+      
     }
     private void TextBox_Changed(object sender, TextChangedEventArgs e)
     {
-      
-      if(e.Source != null)
+      //this.Topmost = true;
+      if (e.Source != null)
       {
         StickyNotesMainView mainView  = new StickyNotesMainView();
         _textBlock.Text = "";
@@ -70,7 +71,7 @@ namespace StickyNotes.App
     {
       this.Visibility = Visibility.Collapsed;
     }
-    private void SubHeader_PreviewMouseDownLeft(object sender, MouseButtonEventArgs e)
+    private void SubHeader_MouseDownLeft(object sender, MouseButtonEventArgs e)
     {
       if (e.ButtonState == MouseButtonState.Pressed)
       {
@@ -82,6 +83,11 @@ namespace StickyNotes.App
     {
       _main_this.MainAddTextBox_Click(sender, e); // If i do this, new window is showing but can't make textblock in MainView stackpanel since new() initialze.
 
+    }
+
+    private void SubWindow_MouseClick(object sender, MouseButtonEventArgs e)
+    {
+      this.Topmost = true;
     }
   }
 }

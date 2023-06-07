@@ -7,8 +7,9 @@
          Background="Black"
              mc:Ignorable="d" 
              WindowStyle="None"
-        Height="300" Width="300">
-    <Grid>
+        Height="300" Width="300"
+        >
+    <Grid MouseLeftButtonDown="SubWindow_MouseClick">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="10*"/>
@@ -21,7 +22,7 @@
         <Button Background="DimGray"
                 Click="SubAddTextBox_Click"
                 >+</Button>
-        <Grid  MouseDown="SubHeader_PreviewMouseDownLeft" Background="DimGray" Grid.Column="1" />
+        <Grid  MouseDown="SubHeader_MouseDownLeft" Background="DimGray" Grid.Column="1" />
         <Button Grid.Column="2"
                 Click="CloseNewWindow_Click"
                 Background="DimGray"
@@ -36,8 +37,10 @@
             Background ="Black"
             TextWrapping="Wrap"
             AcceptsReturn="True"
+            
                  TextChanged="TextBox_Changed">
         </TextBox>
+        
     </Grid>
 
 
