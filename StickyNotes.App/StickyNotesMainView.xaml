@@ -83,12 +83,11 @@
                 Foreground="DarkGray"
             Margin="0 -20 0 0"
                 BorderThickness="0" HorizontalContentAlignment="Stretch">
-            +
+            ...
         </Button>
         <Button Grid.Column="2"
-           
-                Click="closeButton_Click"
-                Grid.Row="0"
+            Click="closeButton_Click"
+            Grid.Row="0"
             Height="40"
             Width="30"
             FontSize="35"
@@ -110,6 +109,7 @@
         <TextBox Grid.Row="2" Style="{StaticResource MyWaterMarkStyle}" 
                  Tag="Search..."
                  Foreground="White" 
+                 TextChanged="Search_TexeChanged"
                  CaretBrush="White"/>
 
         <Button Grid.Row="2" Grid.Column="1" 

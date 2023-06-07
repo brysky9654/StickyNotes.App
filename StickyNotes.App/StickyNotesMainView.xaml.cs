@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -153,13 +157,9 @@ namespace StickyNotes.App
     private void CloseNote_Click(object sender, RoutedEventArgs e)
     {
       
-      //.Visibility = Visibility.Collapsed;
-
-
-          MessageBox.Show("close note");
+      MessageBox.Show("close note");
       deleteLinq[0].win.Visibility = Visibility.Collapsed;
-
-
+      
     }
 
     private void OpenNote_Click(object sender, RoutedEventArgs e)
@@ -176,7 +176,60 @@ namespace StickyNotes.App
       deleteLinq[0].win.Close();
     }
 
+    private void Search_TexeChanged(object sender, TextChangedEventArgs e)
+    {
 
+      string textBoxString = (sender as TextBox).Text;
+
+      foreach (Linq x in linq)
+      {
+        string textBlockString = (x.textBlock as TextBlock).Text;
+        //https://ponyozzang.tistory.com/331
+        if (textBlockString.Contains(textBoxString))
+        {
+          x.textBlock.Visibility = Visibility.Visible;
+          int initIndex = 0;
+          int startIndex = 0;
+          int endIndex = 0;
+          while (endIndex!=-1)
+          {
+            startIndex = x.textBlock.Text.IndexOf(textBoxString, initIndex);
+
+            if (startIndex == -1)
+            {
+              startIndex = endIndex;
+              endIndex = startIndex + textBoxString.Length-1; // <= 로.
+              break;
+            }
+            endIndex = startIndex + (textBoxString.Length - 1);
+
+            //TODO start ~end background color
+            makeBackGroundText(x.textBlock, startIndex, endIndex);
+
+            initIndex = endIndex + 1;
+          }
+          if (endIndex == -1)
+          {
+            //Change all background to part
+            x.textBlock.Background = new SolidColorBrush(Colors.DimGray);
+          }
+        }
+        else
+        {
+          x.textBlock.Visibility = Visibility.Collapsed;
+        }
+      
+      }
+
+
+    }
+
+    //TODO SEARCH PART. BACKGROUND IS YLLEO .
+    private void makeBackGroundText(TextBlock textBlock, int startIndex, int endIndex)
+    {  //Change all background to part
+      textBlock.Background = new SolidColorBrush(Colors.Wheat);
+
+    }
   }
 }
 
