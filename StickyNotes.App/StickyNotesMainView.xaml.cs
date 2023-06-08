@@ -21,6 +21,7 @@ namespace StickyNotes.App
   public partial class StickyNotesMainView : Window
   {
     private StickyNotesView stickyNotesView;
+   
     public struct Linq
     {
       public Window win;
@@ -54,7 +55,6 @@ namespace StickyNotes.App
         x.textBlock.MouseLeftButtonDown += selectTextBlock_Click;
       }
     }
-
     protected void TextBlockList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
       //https://stackoverflow.com/questions/16608523/c-sharp-wpf-move-the-window  
@@ -136,20 +136,16 @@ namespace StickyNotes.App
     }
     private void CloseNote_Click(object sender, RoutedEventArgs e)
     {
-      MessageBox.Show("close note");
       deleteLinq[0].win.Visibility = Visibility.Collapsed;
     }
-
     private void OpenNote_Click(object sender, RoutedEventArgs e)
     {
       //.Visibility = Visibility.Visible;
-      MessageBox.Show("open note");
       deleteLinq[0].win.Visibility = Visibility.Visible;
     }
     private void DeleteNote_Click(object sender, RoutedEventArgs e)
     {
       //.Close();
-      MessageBox.Show("delete note");
       stackPanel_Notes.Children.Remove(deleteLinq[0].textBlock);
       deleteLinq[0].win.Close();
     }
@@ -158,7 +154,7 @@ namespace StickyNotes.App
     {
     string textBoxString = (sender as TextBox).Text; //casting
     foreach (Linq x in linq)
-      {
+    {
         string textBlockString = (x.textBlock as TextBlock).Text;
         if(textBoxString == "")
         {
@@ -168,8 +164,9 @@ namespace StickyNotes.App
           continue;
         }
         //https://ponyozzang.tistory.com/331
-        
-        if (textBlockString.Contains(textBoxString))
+    
+        bool isContainText = isSameString(textBlockString, textBoxString);
+        if (isContainText==true) 
         {
           x.textBlock.Visibility = Visibility.Visible;
           int initIndex = 0;
@@ -180,36 +177,52 @@ namespace StickyNotes.App
           //하나의 텍스트블록에서 search 문자열 (하나 이상)의 start, end Index들을 찾음. 해당 문자열이 없을때까지.
           while (endIndex!=-1 || initIndex < x.textBlock.Text.Length)
           {
-            startIndex = textBlock_temp.Text.IndexOf(textBoxString, initIndex);
+            startIndex = getSameStringIndex(textBlockString, textBoxString, initIndex);
 
             if (startIndex == -1)
             {
               break;
             }
-            endIndex = startIndex + (textBoxString.Length - 1);
+            endIndex = startIndex + (textBoxString.Length - 1);//
             if (endIndex == -1) break;
             makeBackGroundText(x.textBlock, startIndex, endIndex);
             initIndex = endIndex + 1;
           }
-          if (endIndex == -1)
-          {
-            //Highlight Searched Text in WPF   https://www.codeproject.com/Articles/103259/Highlight-Searched-Text-in-WPF-ListView
-            //https://stackoverflow.com/questions/1959856/data-binding-the-textblock-inlines#9546372
-            //x.textBlock.Background = new SolidColorBrush(Colors.DimGray);
-          }
         }
-        else
-        {
-          x.textBlock.Visibility = Visibility.Collapsed;
-        }
+        else x.textBlock.Visibility = Visibility.Collapsed;
       }
+    }
+    private bool isSameString(string textBlock,string textBoxString) // 대소구분없이 동일 문자열 찾기.
+    {
+      textBoxString = textBoxString.ToUpper();
+      textBlock = textBlock.ToUpper();
+      return textBlock.IndexOf(textBoxString)!=-1 ? true : false;
+    }
+  
+    private int getSameStringIndex(string textBlock, string textBoxString, int initIndex) // 대소구분없이 동일 문자열 찾기.
+    {
+      textBoxString = textBoxString.ToUpper();
+      int findIndex = 0;
+      int unfindIndex = -1;
+      for (int textBlockIndex = initIndex; textBlockIndex < textBlock.Length - textBoxString.Length; ++textBlockIndex)
+      {
+        string text = "";
+        text += textBlock[textBlockIndex];
+        findIndex = textBlockIndex;
+        for (int textBlockIndex2 = textBlockIndex + 1; textBlockIndex2 < textBlockIndex + textBoxString.Length; ++textBlockIndex2)
+        {
+          text += textBlock[textBlockIndex2];
+        }
+        text = text.ToUpper();
+        if (text == textBoxString) return findIndex;
+      }
+      return unfindIndex;
     }
     //Highlight Searched Text in WPF 
     //https://www.codeproject.com/Tips/1229482/WPF-TextBlock-Highlighter    I just reference this code, and then I wrote my algorightm from my thinking
     //richtextBlock  c#tutorial 26 search and highlight text in textbox or richtextbox.
 
     //run / inline / richtext  개념.
-
     private void makeBackGroundText(TextBlock textBlock, int startIndex, int endIndex)
     {  //Highlight Searched Text in WPF 
 
@@ -220,8 +233,9 @@ namespace StickyNotes.App
       string after_text;
       string before_text;
       //case num 4 :
-      //  (0) Before String o, After String o   (1) Before String o After String x 
-      //  (2)  Before String x After String o   (3) Before String x After String x
+      //  (0)  Before String x After String x  (1) Before String x After String o 
+      //  (2)  Before String o After String x  (3) Before String o, After String o  
+
       switch (startIndex)
       {
         case 0:  
@@ -236,8 +250,7 @@ namespace StickyNotes.App
             highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
             after_text = textBlock_temp.Text.Substring(endIndex + 1, textBlock_temp.Text.Length - endIndex - 1);
             textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
-            textBlock.Inlines.Add(new Run(after_text));
-            //MessageBox.Show("전문장 x 후문장 o");
+            textBlock.Inlines.Add(after_text);
             break;
           }
         default: 
