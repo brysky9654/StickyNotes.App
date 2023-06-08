@@ -96,6 +96,7 @@ namespace StickyNotes.App
         textBlock.Background = new SolidColorBrush(Colors.DimGray);
         textBlock.Height = 50;
         textBlock.Margin = new Thickness(10, 10, 10, 0);
+        textBlock.TextWrapping = TextWrapping.Wrap;
         stackPanel_Notes.Children.Add(textBlock);
         stickyNotesView = new StickyNotesView(textBlock, linq, this);
       }
