@@ -1,14 +1,17 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace StickyNotes.App
 {
@@ -60,28 +63,15 @@ namespace StickyNotes.App
         x.win.Topmost = false; ;// Set all sub(new) windows to Topmost false. As a result, the click button target window is made to appear preferentially within the selectTextBlock_Click event.
         x.textBlock.MouseRightButtonDown += TextBlockList_Event;
       }
-
-
-
     }
     private void closeButton_Click(object sender, RoutedEventArgs e) => Close();
-
-    //TODO TextBlock
-    /// <summary>
     /// watermark code https://code.4noobz.net/wpf-add-a-watermark-to-a-native-wpf-textbox/
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-
-
     private void selectTextBlock_Click(object sender, MouseButtonEventArgs e)
     {
       var sender_type = sender.GetType();
 
       //축약하기  sender_TextBlock_Type 굳이 안만들고 sender로 바로 할 수 있을 것 같음
       TextBlock sender_textBlock_type = (TextBlock)sender;
-      //sender type is textBlock type
-
       if (sender_type == sender_textBlock_type.GetType())
       {
         // among linq this the List type, find textBlock what I Clicked and then set visible. 
@@ -89,11 +79,8 @@ namespace StickyNotes.App
         {
           if (sender_textBlock_type == x.textBlock)
           {
-            //x.win.Visibility = Visibility.Collapsed;
             x.win.Visibility = Visibility.Visible;
             x.win.Topmost = true;
-
-
           }
         }
       }
@@ -115,17 +102,11 @@ namespace StickyNotes.App
     }
     private void TextBlockList_Event(object sender, MouseButtonEventArgs e)
     {
-      //TODO: Delete list box in main view
-
-
       foreach (Linq x in linq)
       {
         if (x.textBlock == sender)
         {
           deleteLinq.Insert(0, x);
-
-          //TODO Set combo box position. In the corresponding textBlock area. Place in the mouse click position. [Note]
-          //잠만textBlockComboBox.Visibility = Visibility.Visible;
           var button = new Button();
           var contextmenu = new ContextMenu();
           button.ContextMenu = contextmenu;
@@ -145,21 +126,17 @@ namespace StickyNotes.App
           }
           contextmenu.Items.Add(deleteNote_MenuItem);
           x.textBlock.ContextMenu = contextmenu;
-
           //https://stackoverflow.com/questions/65974406/dynamically-adding-a-context-menu-item-with-a-click-handler-in-wpf/65974457#65974457
           closeNote_MenuItem.Click += CloseNote_Click;
           openNote_MenuItem.Click += OpenNote_Click;
           deleteNote_MenuItem.Click += DeleteNote_Click;
-
         }
       }
     }
     private void CloseNote_Click(object sender, RoutedEventArgs e)
     {
-      
       MessageBox.Show("close note");
       deleteLinq[0].win.Visibility = Visibility.Collapsed;
-      
     }
 
     private void OpenNote_Click(object sender, RoutedEventArgs e)
@@ -178,59 +155,112 @@ namespace StickyNotes.App
 
     private void Search_TexeChanged(object sender, TextChangedEventArgs e)
     {
-
-      string textBoxString = (sender as TextBox).Text;
-
-      foreach (Linq x in linq)
+    string textBoxString = (sender as TextBox).Text; //casting
+    foreach (Linq x in linq)
       {
         string textBlockString = (x.textBlock as TextBlock).Text;
+        if(textBoxString == "")
+        {
+          x.textBlock.Inlines.Clear();
+          x.textBlock.Inlines.Add(textBlockString);
+          x.textBlock.Visibility = Visibility.Visible; // I set Visible  since  downward setting  collapsed. 
+          continue;
+        }
         //https://ponyozzang.tistory.com/331
+        
         if (textBlockString.Contains(textBoxString))
         {
           x.textBlock.Visibility = Visibility.Visible;
           int initIndex = 0;
           int startIndex = 0;
           int endIndex = 0;
-          while (endIndex!=-1)
+          TextBlock textBlock_temp = new();
+          textBlock_temp.Text = x.textBlock.Text;
+          //하나의 텍스트블록에서 search 문자열 (하나 이상)의 start, end Index들을 찾음. 해당 문자열이 없을때까지.
+          while (endIndex!=-1 || initIndex < x.textBlock.Text.Length)
           {
-            startIndex = x.textBlock.Text.IndexOf(textBoxString, initIndex);
+            startIndex = textBlock_temp.Text.IndexOf(textBoxString, initIndex);
 
             if (startIndex == -1)
             {
-              startIndex = endIndex;
-              endIndex = startIndex + textBoxString.Length-1; // <= 로.
               break;
             }
             endIndex = startIndex + (textBoxString.Length - 1);
-
-            //TODO start ~end background color
+            if (endIndex == -1) break;
             makeBackGroundText(x.textBlock, startIndex, endIndex);
-
             initIndex = endIndex + 1;
           }
           if (endIndex == -1)
           {
-            //Change all background to part
-            x.textBlock.Background = new SolidColorBrush(Colors.DimGray);
+            //Highlight Searched Text in WPF   https://www.codeproject.com/Articles/103259/Highlight-Searched-Text-in-WPF-ListView
+            //https://stackoverflow.com/questions/1959856/data-binding-the-textblock-inlines#9546372
+            //x.textBlock.Background = new SolidColorBrush(Colors.DimGray);
           }
         }
         else
         {
           x.textBlock.Visibility = Visibility.Collapsed;
         }
-      
       }
-
-
     }
+    //Highlight Searched Text in WPF 
+    //https://www.codeproject.com/Tips/1229482/WPF-TextBlock-Highlighter    I just reference this code, and then I wrote my algorightm from my thinking
+    //richtextBlock  c#tutorial 26 search and highlight text in textbox or richtextbox.
 
-    //TODO SEARCH PART. BACKGROUND IS YLLEO .
+    //run / inline / richtext  개념.
+
     private void makeBackGroundText(TextBlock textBlock, int startIndex, int endIndex)
-    {  //Change all background to part
-      textBlock.Background = new SolidColorBrush(Colors.Wheat);
+    {  //Highlight Searched Text in WPF 
 
+      TextBlock textBlock_temp = new();
+      textBlock_temp.Text = textBlock.Text;
+      textBlock.Inlines.Clear();
+      string highlight_text; 
+      string after_text;
+      string before_text;
+      //case num 4 :
+      //  (0) Before String o, After String o   (1) Before String o After String x 
+      //  (2)  Before String x After String o   (3) Before String x After String x
+      switch (startIndex)
+      {
+        case 0:  
+          if (endIndex >= textBlock_temp.Text.Length -1) // (0)
+          {
+            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
+            textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
+            break;
+          }
+          else // (1)
+          {
+            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
+            after_text = textBlock_temp.Text.Substring(endIndex + 1, textBlock_temp.Text.Length - endIndex - 1);
+            textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
+            textBlock.Inlines.Add(new Run(after_text));
+            //MessageBox.Show("전문장 x 후문장 o");
+            break;
+          }
+        default: 
+          if(endIndex >= textBlock_temp.Text.Length -1) // (3)
+          {
+            before_text= textBlock_temp.Text.Substring(0, startIndex);
+            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
+            textBlock.Inlines.Add(before_text);
+            textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
+            break;
+          }
+          else // (4)
+          {
+            before_text = textBlock_temp.Text.Substring(0, startIndex);
+            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
+            after_text = textBlock_temp.Text.Substring(endIndex +1, textBlock_temp.Text.Length - endIndex - 1);
+            textBlock.Inlines.Add(new Run(before_text));
+            textBlock.Inlines.Add(new Run(highlight_text){ Background = Brushes.LightBlue });
+            textBlock.Inlines.Add(new Run(after_text));
+            break;
+          }
+      }
     }
   }
-}
+} 
 
 

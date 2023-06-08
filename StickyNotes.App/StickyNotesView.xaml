@@ -28,7 +28,6 @@
                 >X</Button>
         <TextBox
             Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Name="SubTextBox" 
-
             Margin="10"
              IsHitTestVisible="True" 
             Foreground ="White"
@@ -39,6 +38,4 @@
                  TextChanged="TextBox_Changed">
         </TextBox>
     </Grid>
-
-
 </Window>

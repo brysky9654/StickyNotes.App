@@ -12,7 +12,6 @@ using static StickyNotes.App.StickyNotesMainView;
 
 namespace StickyNotes.App
 {
-
   /// <summary>
   /// Interaction logic for StickyNotesView.xaml
   /// </summary>
@@ -23,8 +22,6 @@ namespace StickyNotes.App
     private List<Linq> _Linq;
 
     StickyNotesMainView _main_this;
-
-
     public StickyNotesView(TextBlock textBlock, List<Linq> linq, StickyNotesMainView main_this)
     {
       InitializeComponent();
@@ -33,9 +30,7 @@ namespace StickyNotes.App
       _main_this = main_this; 
       newWindow();
     }
-
     //Link with windows and text blocks to form a set. Removing windows and text blocks through the delete button function in windows.
-
     private void newWindow()
     {
       //If there are two windows in the same file, the item name created in one window cannot be used in another.
@@ -45,14 +40,12 @@ namespace StickyNotes.App
     }
     private void TextBox_Changed(object sender, TextChangedEventArgs e)
     {
-
       if (e.Source != null)
       {
         StickyNotesMainView mainView = new StickyNotesMainView();
         _textBlock.Text = "";
         _textBlock.Text = SubTextBox.Text;
         _textBlock.Foreground = new SolidColorBrush(Colors.White);
-
       }
     }
     private void CloseNewWindow_Click(object sender, RoutedEventArgs e)
@@ -66,11 +59,9 @@ namespace StickyNotes.App
         DragMove();
       }
     }
-
     private void SubAddTextBox_Click(object sender, RoutedEventArgs e)
     {
       _main_this.MainAddTextBox_Click(sender, e); // If i do this, new window is showing but can't make textblock in MainView stackpanel since new() initialze.
-
     }
   }
 }

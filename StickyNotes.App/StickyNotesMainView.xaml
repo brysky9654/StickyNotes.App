@@ -4,18 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StickyNotes.App"
-
         mc:Ignorable="d"
         WindowStyle="None"
-        Height="600" Width="500" MinWidth="350" MaxWidth="700"
-        
-        >
-
-    <!--TODO : 돋보기 추가 , X고정 (scrollviewer ex 참고하기 , Stackpanel 사용)  Search부분 증가-->
+        Height="600" Width="500" MinWidth="350" MaxWidth="700">
 
     <Window.Resources>
         <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
-
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
@@ -70,11 +64,9 @@
                 +
             </Button>
             <Grid  MouseDown="MainHeader_MouseDownLeft" Background="#00000000" Width="500" Height="50"/>
-
         </StackPanel>
 
         <Button Grid.Column="1"
-        
            Grid.Row="0"
             Height="40"
             Width="30"
@@ -97,21 +89,15 @@
                 BorderThickness="0" HorizontalContentAlignment="Stretch">
             x
         </Button>
-
-
-
         <!--Subject-->
         <TextBlock Grid.Row="1" Text="Sticky Notes" Foreground="White" FontSize="23" FontWeight="Bold"
                    Margin="13 0 0 10" />
-
         <!--Search-->
-
         <TextBox Grid.Row="2" Style="{StaticResource MyWaterMarkStyle}" 
                  Tag="Search..."
                  Foreground="White" 
                  TextChanged="Search_TexeChanged"
                  CaretBrush="White"/>
-
         <Button Grid.Row="2" Grid.Column="1" 
                 HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" 
@@ -129,15 +115,11 @@
                 BorderBrush="DimGray"
                FontFamily="Unicode"
                 Content="&#x1F50E;" />
-
-
         <StackPanel Name="stackPanel_Notes" Grid.Row="3" Grid.ColumnSpan="3" Orientation="Vertical"
                     Margin="13 10 10 10"
                     MouseLeftButtonDown="TextBlockList_MouseLeftButtonDown"
                     MouseRightButtonDown="TextBlockList_MouseRightButtonDown"
                     >
         </StackPanel>
-
     </Grid>
-
 </Window>
