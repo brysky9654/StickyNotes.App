@@ -199,12 +199,12 @@ namespace StickyNotes.App
       return textBlock.IndexOf(textBoxString)!=-1 ? true : false;
     }
   
-    private int getSameStringIndex(string textBlock, string textBoxString, int initIndex) // 대소구분없이 동일 문자열 찾기.
+    private int getSameStringIndex(string textBlock, string textBoxString, int initIndex) // 대소구분없이 동일 문자열 찾기. problem
     {
       textBoxString = textBoxString.ToUpper();
       int findIndex = 0;
       int unfindIndex = -1;
-      for (int textBlockIndex = initIndex; textBlockIndex < textBlock.Length - textBoxString.Length; ++textBlockIndex)
+      for (int textBlockIndex = initIndex; textBlockIndex <= textBlock.Length - textBoxString.Length; ++textBlockIndex)
       {
         string text = "";
         text += textBlock[textBlockIndex];
@@ -227,7 +227,8 @@ namespace StickyNotes.App
     {  //Highlight Searched Text in WPF 
 
       TextBlock textBlock_temp = new();
-      textBlock_temp.Text = textBlock.Text;
+      textBlock_temp.Inlines.Add(textBlock.Text);
+     // MessageBox.Show(textBlock_temp.Text);
       textBlock.Inlines.Clear();
       string highlight_text; 
       string after_text;
