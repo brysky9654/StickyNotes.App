@@ -21,14 +21,14 @@ namespace StickyNotes.App
   public partial class StickyNotesMainView : Window
   {
     private StickyNotesView stickyNotesView;
-   
+
     public struct Linq
     {
       public Window win;
       public TextBlock textBlock;
     }
     List<Linq> linq = new();
-    List<Linq> deleteLinq =  new();
+    List<Linq> deleteLinq = new();
     public StickyNotesMainView()
     {
       InitializeComponent();
@@ -109,13 +109,13 @@ namespace StickyNotes.App
         // -> Linq 구조체의 경우 삭제 기능이 없기에 textBlock을 null 처리함.
         if (x.textBlock == sender)
         {
-          if(deleteLinq.Count>=1) deleteLinq.RemoveAt(0);
+          if (deleteLinq.Count >= 1) deleteLinq.RemoveAt(0);
           deleteLinq.Insert(0, x); // 이벤트 용도로 임시로 넣음. 1나만.
           var button = new Button();
           var contextmenu = new ContextMenu();
           button.ContextMenu = contextmenu;
           var closeNote_MenuItem = new MenuItem();
-          var openNote_MenuItem  = new MenuItem();
+          var openNote_MenuItem = new MenuItem();
           var deleteNote_MenuItem = new MenuItem();
           deleteNote_MenuItem.Header = "Delete note";
           if (x.win.Visibility == Visibility.Visible)
@@ -146,12 +146,15 @@ namespace StickyNotes.App
       //.Visibility = Visibility.Visible;
       deleteLinq[0].win.Visibility = Visibility.Visible;
     }
+
+    //delete 코드 지저분...
     private void DeleteNote_Click(object sender, RoutedEventArgs e)
     {
       //.Close();
       foreach (Linq _linq in linq) //fixed.
       {
-        if (deleteLinq[0].textBlock == _linq.textBlock)
+        if (deleteLinq.Count == 0 || deleteLinq == null) return;
+        if (deleteLinq[0].textBlock == _linq.textBlock) //error
         {
           deleteLinq[0].win.Close();
           _linq.textBlock.Visibility = Visibility.Collapsed;
@@ -164,12 +167,12 @@ namespace StickyNotes.App
     }
     private void Search_TextChanged(object sender, TextChangedEventArgs e)
     {
-    string textBoxString = (sender as TextBox).Text; //casting
-    foreach (Linq x in linq)
-    {
+      string textBoxString = (sender as TextBox).Text; //casting
+      foreach (Linq x in linq)
+      {
         if (x.textBlock.Text == null) continue;
         string textBlockString = (x.textBlock as TextBlock).Text;
-        if(textBoxString == "")
+        if (textBoxString == "")
         {
           x.textBlock.Inlines.Clear();
           x.textBlock.Inlines.Add(textBlockString);
@@ -177,9 +180,9 @@ namespace StickyNotes.App
           continue;
         }
         //https://ponyozzang.tistory.com/331
-    
+
         bool isContainText = isSameString(textBlockString, textBoxString);
-        if (isContainText==true) 
+        if (isContainText == true)
         {
           x.textBlock.Visibility = Visibility.Visible;
           int initIndex = 0;
@@ -188,7 +191,7 @@ namespace StickyNotes.App
           TextBlock textBlock_temp = new();
           textBlock_temp.Text = x.textBlock.Text;
           //하나의 텍스트블록에서 search 문자열 (하나 이상)의 start, end Index들을 찾음. 해당 문자열이 없을때까지.
-          while (endIndex!=-1 || initIndex < x.textBlock.Text.Length)
+          while (endIndex != -1 || initIndex < x.textBlock.Text.Length)
           {
             startIndex = getSameStringIndex(textBlockString, textBoxString, initIndex);
 
@@ -205,13 +208,13 @@ namespace StickyNotes.App
         else x.textBlock.Visibility = Visibility.Collapsed;
       }
     }
-    private bool isSameString(string textBlock,string textBoxString) // 대소구분없이 동일 문자열 찾기.
+    private bool isSameString(string textBlock, string textBoxString) // 대소구분없이 동일 문자열 찾기.
     {
       textBoxString = textBoxString.ToUpper();
       textBlock = textBlock.ToUpper();
-      return textBlock.IndexOf(textBoxString)!=-1 ? true : false;
+      return textBlock.IndexOf(textBoxString) != -1 ? true : false;
     }
-  
+
     private int getSameStringIndex(string textBlock, string textBoxString, int initIndex) // 대소구분없이 동일 문자열 찾기
     {
       textBoxString = textBoxString.ToUpper();
@@ -242,7 +245,7 @@ namespace StickyNotes.App
       textBlock_temp.Inlines.Add(textBlock.Text);
       MessageBox.Show(textBlock_temp.Text);
       textBlock.Inlines.Clear();
-      string highlight_text; 
+      string highlight_text;
       string after_text;
       string before_text;
       //case num 4 :
@@ -250,9 +253,9 @@ namespace StickyNotes.App
       //  (2)  Before String o After String x  (3) Before String o, After String o  
 
       switch (startIndex)
-      { 
-        case 0:  
-          if (endIndex >= textBlock_temp.Text.Length -1) // (0)
+      {
+        case 0:
+          if (endIndex >= textBlock_temp.Text.Length - 1) // (0)
           {
             highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1); //bug
             textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
@@ -266,10 +269,10 @@ namespace StickyNotes.App
             textBlock.Inlines.Add(after_text);
             break;
           }
-        default: 
-          if(endIndex >= textBlock_temp.Text.Length -1) // (3)  
+        default:
+          if (endIndex >= textBlock_temp.Text.Length - 1) // (3)  
           {
-            before_text= textBlock_temp.Text.Substring(0, startIndex);
+            before_text = textBlock_temp.Text.Substring(0, startIndex);
             highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
             textBlock.Inlines.Add(before_text);
             textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
@@ -279,15 +282,13 @@ namespace StickyNotes.App
           {
             before_text = textBlock_temp.Text.Substring(0, startIndex);
             highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
-            after_text = textBlock_temp.Text.Substring(endIndex +1, textBlock_temp.Text.Length - endIndex - 1);
+            after_text = textBlock_temp.Text.Substring(endIndex + 1, textBlock_temp.Text.Length - endIndex - 1);
             textBlock.Inlines.Add(new Run(before_text));
-            textBlock.Inlines.Add(new Run(highlight_text){ Background = Brushes.LightBlue });
+            textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
             textBlock.Inlines.Add(new Run(after_text));
             break;
           }
       }
     }
   }
-} 
-
-
+}
