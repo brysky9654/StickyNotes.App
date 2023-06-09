@@ -46,6 +46,7 @@ namespace StickyNotes.App
         _textBlock.Text = "";
         _textBlock.Text = SubTextBox.Text;
         _textBlock.Foreground = new SolidColorBrush(Colors.White);
+        if(_textBlock.Visibility != Visibility.Visible) { _textBlock.Visibility = Visibility.Visible; } // fixed, I experinced what textBlock is collapsed first. since this bug, I set this for safe
       }
     }
     private void CloseNewWindow_Click(object sender, RoutedEventArgs e)

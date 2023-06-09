@@ -96,7 +96,7 @@
         <TextBox Grid.Row="2" Style="{StaticResource MyWaterMarkStyle}" 
                  Tag="Search..."
                  Foreground="White" 
-                 TextChanged="Search_TexeChanged"
+                 TextChanged="Search_TextChanged"
                  CaretBrush="White"/>
         <Button Grid.Row="2" Grid.Column="1" 
                 HorizontalAlignment="Stretch" 

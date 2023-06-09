@@ -105,9 +105,12 @@ namespace StickyNotes.App
     {
       foreach (Linq x in linq)
       {
+        // delete는 저장할 필요없이 delete 시 deleteLinq와 x.textBlock을 삭제해야함.
+        // -> Linq 구조체의 경우 삭제 기능이 없기에 textBlock을 null 처리함.
         if (x.textBlock == sender)
         {
-          deleteLinq.Insert(0, x);
+          if(deleteLinq.Count>=1) deleteLinq.RemoveAt(0);
+          deleteLinq.Insert(0, x); // 이벤트 용도로 임시로 넣음. 1나만.
           var button = new Button();
           var contextmenu = new ContextMenu();
           button.ContextMenu = contextmenu;
@@ -146,15 +149,25 @@ namespace StickyNotes.App
     private void DeleteNote_Click(object sender, RoutedEventArgs e)
     {
       //.Close();
-      stackPanel_Notes.Children.Remove(deleteLinq[0].textBlock);
-      deleteLinq[0].win.Close();
+      foreach (Linq _linq in linq) //fixed.
+      {
+        if (deleteLinq[0].textBlock == _linq.textBlock)
+        {
+          deleteLinq[0].win.Close();
+          _linq.textBlock.Visibility = Visibility.Collapsed;
+          _linq.win.Close();
+          _linq.textBlock.Text = null;
+          stackPanel_Notes.Children.Remove(deleteLinq[0].textBlock);
+          deleteLinq.RemoveAt(0);
+        }
+      }
     }
-
-    private void Search_TexeChanged(object sender, TextChangedEventArgs e)
+    private void Search_TextChanged(object sender, TextChangedEventArgs e)
     {
     string textBoxString = (sender as TextBox).Text; //casting
     foreach (Linq x in linq)
     {
+        if (x.textBlock.Text == null) continue;
         string textBlockString = (x.textBlock as TextBlock).Text;
         if(textBoxString == "")
         {
@@ -183,7 +196,7 @@ namespace StickyNotes.App
             {
               break;
             }
-            endIndex = startIndex + (textBoxString.Length - 1);//
+            endIndex = startIndex + (textBoxString.Length - 1);
             if (endIndex == -1) break;
             makeBackGroundText(x.textBlock, startIndex, endIndex);
             initIndex = endIndex + 1;
@@ -199,7 +212,7 @@ namespace StickyNotes.App
       return textBlock.IndexOf(textBoxString)!=-1 ? true : false;
     }
   
-    private int getSameStringIndex(string textBlock, string textBoxString, int initIndex) // 대소구분없이 동일 문자열 찾기. problem
+    private int getSameStringIndex(string textBlock, string textBoxString, int initIndex) // 대소구분없이 동일 문자열 찾기
     {
       textBoxString = textBoxString.ToUpper();
       int findIndex = 0;
@@ -225,10 +238,9 @@ namespace StickyNotes.App
     //run / inline / richtext  개념.
     private void makeBackGroundText(TextBlock textBlock, int startIndex, int endIndex)
     {  //Highlight Searched Text in WPF 
-
       TextBlock textBlock_temp = new();
       textBlock_temp.Inlines.Add(textBlock.Text);
-     // MessageBox.Show(textBlock_temp.Text);
+      MessageBox.Show(textBlock_temp.Text);
       textBlock.Inlines.Clear();
       string highlight_text; 
       string after_text;
@@ -238,11 +250,11 @@ namespace StickyNotes.App
       //  (2)  Before String o After String x  (3) Before String o, After String o  
 
       switch (startIndex)
-      {
+      { 
         case 0:  
           if (endIndex >= textBlock_temp.Text.Length -1) // (0)
           {
-            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
+            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1); //bug
             textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
             break;
           }
@@ -255,7 +267,7 @@ namespace StickyNotes.App
             break;
           }
         default: 
-          if(endIndex >= textBlock_temp.Text.Length -1) // (3)
+          if(endIndex >= textBlock_temp.Text.Length -1) // (3)  
           {
             before_text= textBlock_temp.Text.Substring(0, startIndex);
             highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
