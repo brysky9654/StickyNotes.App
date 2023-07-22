@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -22,6 +23,11 @@ namespace StickyNotes.App
   {
     private StickyNotesView stickyNotesView;
 
+    public struct Index_struct
+    {
+      public int startIdx;
+      public int endIdx;
+    }
     public struct Linq
     {
       public Window win;
@@ -70,7 +76,7 @@ namespace StickyNotes.App
     {
       var sender_type = sender.GetType();
 
-      //축약하기  sender_TextBlock_Type 굳이 안만들고 sender로 바로 할 수 있을 것 같음
+      //TO DO : Refactoring.
       TextBlock sender_textBlock_type = (TextBlock)sender;
       if (sender_type == sender_textBlock_type.GetType())
       {
@@ -105,12 +111,13 @@ namespace StickyNotes.App
     {
       foreach (Linq x in linq)
       {
+        // whitout saving when delete, 'deleteLinq and x.textBlock' should be deleted.
         // delete는 저장할 필요없이 delete 시 deleteLinq와 x.textBlock을 삭제해야함.
         // -> Linq 구조체의 경우 삭제 기능이 없기에 textBlock을 null 처리함.
         if (x.textBlock == sender)
         {
           if (deleteLinq.Count >= 1) deleteLinq.RemoveAt(0);
-          deleteLinq.Insert(0, x); // 이벤트 용도로 임시로 넣음. 1나만.
+          deleteLinq.Insert(0, x); // for event purpose(temparary).
           var button = new Button();
           var contextmenu = new ContextMenu();
           button.ContextMenu = contextmenu;
@@ -147,7 +154,7 @@ namespace StickyNotes.App
       deleteLinq[0].win.Visibility = Visibility.Visible;
     }
 
-    //delete 코드 지저분...
+    //ToDo: Refactoring
     private void DeleteNote_Click(object sender, RoutedEventArgs e)
     {
       //.Close();
@@ -191,19 +198,24 @@ namespace StickyNotes.App
           TextBlock textBlock_temp = new();
           textBlock_temp.Text = x.textBlock.Text;
           //하나의 텍스트블록에서 search 문자열 (하나 이상)의 start, end Index들을 찾음. 해당 문자열이 없을때까지.
+          List<Index_struct> indexSavingList = new List<Index_struct>();
           while (endIndex != -1 || initIndex < x.textBlock.Text.Length)
           {
             startIndex = getSameStringIndex(textBlockString, textBoxString, initIndex);
-
             if (startIndex == -1)
             {
               break;
             }
             endIndex = startIndex + (textBoxString.Length - 1);
             if (endIndex == -1) break;
-            makeBackGroundText(x.textBlock, startIndex, endIndex);
+            var idxStruct = new Index_struct();
+            idxStruct.startIdx = startIndex;
+            idxStruct.endIdx = endIndex;
+            indexSavingList.Add(idxStruct);
             initIndex = endIndex + 1;
           }
+          makeBackGroundText(x.textBlock, indexSavingList);
+
         }
         else x.textBlock.Visibility = Visibility.Collapsed;
       }
@@ -215,6 +227,10 @@ namespace StickyNotes.App
       return textBlock.IndexOf(textBoxString) != -1 ? true : false;
     }
 
+    /*
+     * 로직 변경 : 스택에 검색한 단어 인덱스 넣기,. 검색 단어가 변경될 때마다 stack. 클리어해서 다시 넣기.
+     * 스택 사이즈 만큼 한번에 해당인덱스에 반복문 돌려서 hight light 색상 입히기
+     */
     private int getSameStringIndex(string textBlock, string textBoxString, int initIndex) // 대소구분없이 동일 문자열 찾기
     {
       textBoxString = textBoxString.ToUpper();
@@ -235,59 +251,44 @@ namespace StickyNotes.App
       return unfindIndex;
     }
     //Highlight Searched Text in WPF 
-    //https://www.codeproject.com/Tips/1229482/WPF-TextBlock-Highlighter    I just reference this code, and then I wrote my algorightm from my thinking
+    //https://www.codeproject.com/Tips/1229482/WPF-TextBlock-Highlighter
+    //I just reference this code, and then I wrote my algorightm from my thinking
     //richtextBlock  c#tutorial 26 search and highlight text in textbox or richtextbox.
 
     //run / inline / richtext  개념.
-    private void makeBackGroundText(TextBlock textBlock, int startIndex, int endIndex)
+    private void makeBackGroundText(TextBlock textBlock, List<Index_struct> indexSavingList)
     {  //Highlight Searched Text in WPF 
-      TextBlock textBlock_temp = new();
-      textBlock_temp.Inlines.Add(textBlock.Text);
-      MessageBox.Show(textBlock_temp.Text);
-      textBlock.Inlines.Clear();
-      string highlight_text;
-      string after_text;
-      string before_text;
-      //case num 4 :
-      //  (0)  Before String x After String x  (1) Before String x After String o 
-      //  (2)  Before String o After String x  (3) Before String o, After String o  
-
-      switch (startIndex)
+      string strTextblock = textBlock.Text.ToString(); // strTextBlock은 하이라이트와 하이라이트가 아닌 문자열을 찾을 용도
+      textBlock.Inlines.Clear(); // textBlock 초기화해서 general Text와 highlightText를 삽입할 예정.
+      int offset = 1; //기본값:1 ,  하이라이트 문자열을 찾으면 textBlock에 모두 추가 한 후 인덱스 시작을 하이라이트문자열 뒤 문자부터 시작하기 위한 용도
+      for (int idx = 0; idx < strTextblock.Length; idx += offset) // 
       {
-        case 0:
-          if (endIndex >= textBlock_temp.Text.Length - 1) // (0)
+        string generalText = ""; // 하이라이트가 아닌 문자 (문자로 칭한 이유는 generalText에 한글자 씩 textBlock에 추가)
+        string highlightText = ""; // 하이라이트 문자열
+        int isHighLight = 0;
+        for (int SavingListidx = 0; SavingListidx < indexSavingList.Count; ++SavingListidx) // 하이라이트 시작,끝 인덱스 구조체를 넣은 indexSavingList 를 탐색
+        {
+          // strTextBlock의 인덱스와 하이라이트 start인덱스가 동일하면
+          // 해당 start인덱스와 end인덱스 사이 문자열을 하이라이트 색으로 업데이트해 textBlock에 삽입,
+          // offset값을 업데이트
+          if (idx == indexSavingList[SavingListidx].startIdx)
           {
-            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1); //bug
-            textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
+            isHighLight = 1;
+            int startIdx = indexSavingList[SavingListidx].startIdx;
+            int endIdx = indexSavingList[SavingListidx].endIdx;
+            highlightText += strTextblock.Substring(startIdx, endIdx - startIdx + 1);
+            textBlock.Inlines.Add(new Run(highlightText) { Background = Brushes.LightBlue });
+            offset = (endIdx - startIdx + 1);
             break;
           }
-          else // (1)
-          {
-            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
-            after_text = textBlock_temp.Text.Substring(endIndex + 1, textBlock_temp.Text.Length - endIndex - 1);
-            textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
-            textBlock.Inlines.Add(after_text);
-            break;
-          }
-        default:
-          if (endIndex >= textBlock_temp.Text.Length - 1) // (3)  
-          {
-            before_text = textBlock_temp.Text.Substring(0, startIndex);
-            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
-            textBlock.Inlines.Add(before_text);
-            textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
-            break;
-          }
-          else // (4)
-          {
-            before_text = textBlock_temp.Text.Substring(0, startIndex);
-            highlight_text = textBlock_temp.Text.Substring(startIndex, endIndex - startIndex + 1);
-            after_text = textBlock_temp.Text.Substring(endIndex + 1, textBlock_temp.Text.Length - endIndex - 1);
-            textBlock.Inlines.Add(new Run(before_text));
-            textBlock.Inlines.Add(new Run(highlight_text) { Background = Brushes.LightBlue });
-            textBlock.Inlines.Add(new Run(after_text));
-            break;
-          }
+        }
+        //general 텍스트이면 해당 인덱스 문자열(1글자)를 textBlock에 삽입./
+        if (isHighLight == 0)
+        {
+          offset = 1;
+          generalText += strTextblock[idx];
+          textBlock.Inlines.Add(generalText);
+        }
       }
     }
   }
