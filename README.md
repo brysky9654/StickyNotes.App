@@ -4,27 +4,27 @@ Window's StickyNotes Clone coding Project
 This is TO DO LIST program. I tried Sticky Notes app in Window OS clone coding using WPF without MVVM as my first WPF project.
 
 -App Feature-
+
 1. Features:
 
-▶Text box
+  ▶Text box
 
-  ▷Additional features
+   ▷Additional features
+     When + is clicked, a text box is added, and it can be added by pressing + in the text box.
 
-    When + is clicked, a text box is added, and it can be added by pressing + in the text box.
+  ▶List
 
-▶List
+   When text is entered in the text box, it is immediately reflected in the text block list.
 
-    When text is entered in the text box, it is immediately reflected in the text block list.
-
-▶Search
+  ▶Search
 
    Added a highlight watermark called Search in the search textbox.
 
    As you type, the To do list highlights all the text you're looking for.
 
-▶Single Instance
+  ▶Single Instance
 
-Once the program is executed, it prevents repeated execution.
+   Once the program is executed, it prevents repeated execution.
 
  
 
