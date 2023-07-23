@@ -43,6 +43,6 @@ This is TO DO LIST program. I tried Sticky Notes app in Window OS clone coding u
 
 3. Retrospective
 
-        ▶There are many deficiencies in program design and function, but the meaning was put into dealing with WPF. Since I focused only on implementation during             code design, I plan to work on code refactoring using the MVVM pattern after supplementing the supplementary points.
+        ▶There are many deficiencies in program design and function, but the meaning was put into dealing with WPF. Since I focused only on implementation during code design, I plan to work on code refactoring using the MVVM pattern after supplementing the supplementary points.
         
-        ▶Distribution: I uploaded the exe file in the bin folder to the blog, but it was not executed when I downloaded and executed it. To distribute, you need to           do it through various methods, and among them, I even tried to distribute it through Click One. However, the executable file in the folder did not work,             and I had to run it through the installation file. I will see the Click One feature again.
+        ▶Distribution: I uploaded the exe file in the bin folder to the blog, but it was not executed when I downloaded and executed it. To distribute, you need to do it through various methods, and among them, I even tried to distribute it through Click One. However, the executable file in the folder did not work, and I had to run it through the installation file. I will see the Click One feature again.
